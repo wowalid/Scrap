@@ -1,6 +1,15 @@
+
+<meta charset="utf-8"/>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css">
+<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+
 <!------ Include the above in your HEAD tag ---------->
 <style>
 body {
@@ -52,28 +61,96 @@ body {
 		<div class="col-md-12">
                                <form class="form-horizontal" role="form">
                                   <div class="form-group">
-                                    <label for="filter">Ville</label>
-                                    <select class="form-control">
-                                        <option value="0" selected>All Snippets</option>
-                                        <option value="1">Featured</option>
-                                        <option value="2">Most popular</option>
-                                        <option value="3">Top rated</option>
-                                        <option value="4">Most commented</option>
+                                      <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('#villeChoix').multiselect({
+                                            includeSelectAllOption: true,
+                                            buttonWidth: 950,
+                                            enableFiltering: true
+                                        });
+                                        });
+                                    </script>
+                                     <label for="contain">Ville</label><br/>
+                                     <select id="villeChoix" multiple="multiple">
+                                            <option value="internat">Internat</option>
+                                            <option value="externat">Externat</option>
+                                            <option value="demipension">Demi-pension</option>
                                     </select>
                                   </div>
                                   <div class="form-group">
-                                    <label for="contain">Type de formation</label>
-                                    <input class="form-control" type="text" />
+                                      <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('#typeFormation').multiselect({
+                                            includeSelectAllOption: true,
+                                            buttonWidth: 950,
+                                            enableFiltering: true
+                                        });
+                                        });
+                                    </script>
+                                     <label for="contain">Type de formation</label><br/>
+                                     <select id="typeFormation" multiple="multiple">
+                                            <option value="general">Général</option>
+                                            <option value="approfondissement">Approfondissement</option>
+                                    </select>
                                   </div>
                                   <div class="form-group">
-                                    <label for="contain">Date</label>
-                                    <input class="form-control" type="text" />
-                                  </div>
-                                  <div class="form-group">
-                                      <label for="contain">Theme</label>
-                                      <input class="form-control" type="text" />
-                                    </div>
+                                    <label for="contain">Date</label><br/>
+                                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
 
+                                    <script>
+                                    $(function() {
+                                      $('input[name="daterange"]').daterangepicker({
+                                        opens: 'left'
+                                      }, function(start, end, label) {
+                                        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+                                      });
+                                    });
+                                    </script>
+                                  </div>
+                                  <div class="form-group">
+                                      <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('#boot-multiselect-demo').multiselect({
+                                            includeSelectAllOption: true,
+                                            buttonWidth: 950,
+                                            enableFiltering: true
+                                        });
+                                        });
+                                    </script>
+                                     <label for="contain">Thèmes</label><br/>
+                                     <select id="boot-multiselect-demo" multiple="multiple">
+                                            <option value="jQuery">jQuery Tutorials</option>
+                                            <option value="Bootstrap">Bootstrap Framework</option>
+                                            <option value="HTML">HTML</option>
+                                            <option value="CSS" >CSS</option>
+                                            <option value="Angular">Angular</option>
+                                            <option value="Angular">javascript</option>
+                                            <option value="Java">Java</option>
+                                            <option value="Python">Python</option>
+                                            <option value="MySQL">MySQL</option>
+                                            <option value="Oracle">Oracle</option>
+                                    </select>
+                                  </div>
+                                    <div class="form-group">
+
+                                        <script type="text/javascript">
+                                          $(document).ready(function() {
+                                              $('#accueilChoix').multiselect({
+                                              includeSelectAllOption: true,
+                                              buttonWidth: 950,
+                                              enableFiltering: true
+                                          });
+                                          });
+                                      </script>
+                                       <label for="contain">Accueil</label><br/>
+                                       <select id="accueilChoix" multiple="multiple">
+                                              <option value="internat">Internat</option>
+                                              <option value="externat">Externat</option>
+                                              <option value="demipension">Demi-pension</option>
+                                      </select>
+
+                                    </div>
+                                    
                                   <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                                 </form>
 
