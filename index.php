@@ -11,6 +11,20 @@
 <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
 
 <!------ Include the above in your HEAD tag ---------->
+
+<?php                                       $servername = "localhost";
+                                            $username = "root";
+                                            $password = "root";
+                                            
+                                            // Create connection
+                                            $mysqli = new mysqli($servername, $username, $password, "bafa");
+                                            if ($mysqli->connect_errno) {
+                                                echo "Echec lors de la connexion à MySQL : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+                                            }
+                                            
+?>
+
+
 <style>
 body {
     padding-top: 50px;
@@ -61,6 +75,7 @@ body {
 		<div class="col-md-12">
                                <form class="form-horizontal" role="form">
                                   <div class="form-group">
+
                                       <script type="text/javascript">
                                         $(document).ready(function() {
                                             $('#villeChoix').multiselect({
@@ -72,9 +87,17 @@ body {
                                     </script>
                                      <label for="contain">Ville</label><br/>
                                      <select id="villeChoix" multiple="multiple">
-                                            <option value="internat">Internat</option>
-                                            <option value="externat">Externat</option>
-                                            <option value="demipension">Demi-pension</option>
+
+                                     <?php 
+
+                                            //Remplir Lieu
+                                            $res = $mysqli->query("SELECT DISTINCT(Lieu) FROM bafaComp ORDER BY Lieu DESC");
+
+                                            while ($row = $res->fetch_assoc()) {
+                                              echo '<option value="' . $row['Lieu'] . '">' . $row['Lieu'] . '</option>';
+                                              echo $row['Lieu'];
+                                            }
+                                            ?>
                                     </select>
                                   </div>
                                   <div class="form-group">
@@ -119,16 +142,17 @@ body {
                                     </script>
                                      <label for="contain">Thèmes</label><br/>
                                      <select id="boot-multiselect-demo" multiple="multiple">
-                                            <option value="jQuery">jQuery Tutorials</option>
-                                            <option value="Bootstrap">Bootstrap Framework</option>
-                                            <option value="HTML">HTML</option>
-                                            <option value="CSS" >CSS</option>
-                                            <option value="Angular">Angular</option>
-                                            <option value="Angular">javascript</option>
-                                            <option value="Java">Java</option>
-                                            <option value="Python">Python</option>
-                                            <option value="MySQL">MySQL</option>
-                                            <option value="Oracle">Oracle</option>
+
+                                     <?php 
+
+                                            //Remplir Lieu
+                                            $res = $mysqli->query("SELECT DISTINCT(Themes) FROM bafaComp ORDER BY Lieu DESC");
+
+                                            while ($row = $res->fetch_assoc()) {
+                                              echo '<option value="' . $row['Themes'] . '">' . $row['Themes'] . '</option>';
+                                              echo $row['Themes'];
+                                            }
+                                            ?>
                                     </select>
                                   </div>
                                     <div class="form-group">
