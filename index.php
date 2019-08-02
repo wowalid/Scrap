@@ -7,8 +7,8 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
-<link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css">
-<script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+<link rel="stylesheet" href="dist/css/bootstrap-multiselect.css" type="text/css">
+<script type="text/javascript" src="dist/js/bootstrap-multiselect.js"></script>
 
 <!------ Include the above in your HEAD tag ---------->
 
@@ -72,8 +72,12 @@ body {
 </style>
 <div class="container">
 	<div class="row">
+        
 		<div class="col-md-12">
-                               <form class="form-horizontal" role="form">
+        <h3>Comparateur de formation BAFA en Loire-Atlantique</h3>
+        <br/>
+        <br/>
+                               <form class="form-horizontal" role="form" method="post">
                                   <div class="form-group">
 
                                       <script type="text/javascript">
@@ -86,7 +90,7 @@ body {
                                         });
                                     </script>
                                      <label for="contain">Ville</label><br/>
-                                     <select id="villeChoix" multiple="multiple">
+                                     <select id="villeChoix" name="ville[]" multiple="multiple">
 
                                      <?php 
 
@@ -106,14 +110,23 @@ body {
                                             $('#typeFormation').multiselect({
                                             includeSelectAllOption: true,
                                             buttonWidth: 950,
-                                            enableFiltering: true
+                                            enableFiltering: true,
+                                            onChange: function(element, checked) {
+                                            var brands = $('#typeFormation option:selected');
+                                            var selecteds = [];
+                                            $(brands).each(function(index, brand){
+                                                selecteds.push([$(this).val()]);
+                                            });
+
+                                            console.log(selecteds);
+                                        }
                                         });
                                         });
                                     </script>
                                      <label for="contain">Type de formation</label><br/>
-                                     <select id="typeFormation" multiple="multiple">
-                                            <option value="general">Général</option>
-                                            <option value="approfondissement">Approfondissement</option>
+                                     <select id="typeFormation" name="typeformation[]" multiple="multiple">
+                                            <option value="General">Général</option>
+                                            <option value="Approfondissement">Approfondissement</option>
                                     </select>
                                   </div>
                                   <div class="form-group">
@@ -136,12 +149,21 @@ body {
                                             $('#boot-multiselect-demo').multiselect({
                                             includeSelectAllOption: true,
                                             buttonWidth: 950,
-                                            enableFiltering: true
+                                            enableFiltering: true,
+                                            onChange: function(element, checked) {
+                                            var brands = $('#boot-multiselect-demo option:selected');
+                                            var selected = [];
+                                            $(brands).each(function(index, brand){
+                                                selected.push([$(this).val()]);
+                                            });
+
+                                            console.log(selected);
+                                        }
                                         });
                                         });
                                     </script>
                                      <label for="contain">Thèmes</label><br/>
-                                     <select id="boot-multiselect-demo" multiple="multiple">
+                                     <select id="boot-multiselect-demo" name="theme[]" multiple="multiple">
 
                                      <?php 
 
@@ -167,17 +189,122 @@ body {
                                           });
                                       </script>
                                        <label for="contain">Accueil</label><br/>
-                                       <select id="accueilChoix" multiple="multiple">
-                                              <option value="internat">Internat</option>
-                                              <option value="externat">Externat</option>
-                                              <option value="demipension">Demi-pension</option>
+                                       <select id="accueilChoix" name="accueil[]" multiple="multiple">
+                                              <option value="Internat">Internat</option>
+                                              <option value="Externat">Externat</option>
+                                              <option value="Demi-pension">Demi-pension</option>
                                       </select>
 
                                     </div>
                                     
-                                  <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                  <button type="submit" name="submit" class="btn btn-primary" value=Submit><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                                 </form>
 
         </div>
 	</div>
 </div>
+
+<?php 
+    $query = "SELECT * FROM bafaComp WHERE ";
+    
+
+
+    // Check if form is submitted successfully 
+    if(isset($_POST["submit"]))  
+    { 
+        $query = $query . " 1 = 1 ";
+        // Check if any option is selected 
+        if(isset($_POST["theme"]))  
+        { 
+            $query = $query . " AND Themes LIKE '%";
+            $i = 0;
+            foreach ($_POST['theme'] as $subject)  {
+                if ($i == 0){
+                    $query = $query . $subject . "%' ";
+
+                }
+                else{
+                    $query = $query . " OR Themes LIKE '%" . $subject . "%'" . " ";
+                }
+                $i = $i + 1;
+                
+            }
+                            
+        } 
+        if(isset($_POST["accueil"]))  
+        { 
+            $query = $query . " AND Accueil LIKE '%";
+            $i = 0;
+            foreach ($_POST['accueil'] as $subject)  {
+                if ($i == 0){
+                    $query = $query . $subject . "%' ";
+
+                }
+                else{
+                    $query = $query . " OR Accueil LIKE '%" . $subject . "%'" . " ";
+                }
+                $i = $i + 1;
+                
+            }
+                            
+        } 
+
+        if(isset($_POST["ville"]))  
+        { 
+            $query = $query . " AND Accueil LIKE '%";
+            $i = 0;
+            foreach ($_POST['ville'] as $subject)  {
+                if ($i == 0){
+                    $query = $query . $subject . "%' ";
+
+                }
+                else{
+                    $query = $query . " OR Accueil LIKE '%" . $subject . "%'" . " ";
+                }
+                $i = $i + 1;
+                
+            }
+                            
+        } 
+        $res = $mysqli->query($query);
+
+        $i=0;
+        while ($row = $res->fetch_assoc()) {
+            if ($i == 0){
+                echo '<br/>';
+                echo '<br/>';
+               
+                echo '<div class="container">';
+                echo '<div class="row">';
+                echo '<h3>Résultats de la recherche</h3>';
+                echo '<br/>';
+                echo '<br/>';
+                echo "<table class='table'>";
+                echo "<thead>";
+                echo "<tr>";
+                echo '<th scope="col">Date début</th>';
+                echo '<th scope="col">Date Fin</th>';
+                echo '<th scope="col">Thème</th>';
+                echo '<th scope="col">Lieu</th>';
+                echo '<th scope="col">Accueil</th>';
+                echo '<th scope="col">En savoir plus</th>';
+                echo "</tr>";
+                echo "</thead>";
+                echo "<tbody>";
+            }
+            echo "<tr>";
+            foreach ($row as $value) {
+                echo "<td>" . $value . "</td>";
+            }
+            echo "</tr>";
+            $i = $i + 1;
+        }
+        echo "</tbody>";
+        echo "</table>";
+
+        
+
+    }
+
+
+?> 
