@@ -93,14 +93,329 @@ header('Content-Type: text/html; charset=utf-8');
 #parent:hover #hover-content {
     display:block;
 }
-.bg {
+/* 
+  You want a simple and fancy tooltip?
+  Just copy all [data-tooltip] blocks:
+*/
+[data-tooltip] {
+  position: relative;
+  z-index: 10;
+}
 
-  background: url('https://source.unsplash.com/twukN12EN7c/1920x1080') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
-  -o-background-size: cover;
+/* Positioning and visibility settings of the tooltip */
+[data-tooltip]:before,
+[data-tooltip]:after {
+  position: absolute;
+  visibility: hidden;
+  opacity: 0;
+  left: 50%;
+  bottom: calc(100% + 5px);
+  pointer-events: none;
+  transition: 0.2s;
+  will-change: transform;
+}
 
+/* The actual tooltip with a dynamic width */
+[data-tooltip]:before {
+  content: attr(data-tooltip);
+  padding: 10px 18px;
+  min-width: 50px;
+  max-width: 300px;
+  width: max-content;
+  width: -moz-max-content;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: rgba(59, 72, 80, 0.9);
+  background-image: linear-gradient(30deg,
+    rgba(59, 72, 80, 0.44),
+    rgba(59, 68, 75, 0.44),
+    rgba(60, 82, 88, 0.44));
+  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.2);
+  color: #fff;
+  text-align: center;
+  white-space: pre-wrap;
+  transform: translate(-50%, -5px) scale(0.5);
+}
+
+/* Tooltip arrow */
+[data-tooltip]:after {
+  content: '';
+  border-style: solid;
+  border-width: 5px 5px 0px 5px;
+  border-color: rgba(55, 64, 70, 0.9) transparent transparent transparent;
+  transition-duration: 0s; /* If the mouse leaves the element, 
+                              the transition effects for the 
+                              tooltip arrow are "turned off" */
+  transform-origin: top;   /* Orientation setting for the
+                              slide-down effect */
+  transform: translateX(-50%) scaleY(0);
+}
+
+/* Tooltip becomes visible at hover */
+[data-tooltip]:hover:before,
+[data-tooltip]:hover:after {
+  visibility: visible;
+  opacity: 1;
+}
+/* Scales from 0.5 to 1 -> grow effect */
+[data-tooltip]:hover:before {
+  transition-delay: 0.3s;
+  transform: translate(-50%, -5px) scale(1);
+}
+/* Slide down effect only on mouseenter (NOT on mouseleave) */
+[data-tooltip]:hover:after {
+  transition-delay: 0.5s; /* Starting after the grow effect */
+  transition-duration: 0.2s;
+  transform: translateX(-50%) scaleY(1);
+}
+/*
+  That's it.
+*/
+
+
+
+
+
+
+
+/*
+  If you want some adjustability
+  here are some orientation settings you can use:
+*/
+
+/* LEFT */
+/* Tooltip + arrow */
+[data-tooltip-location="left"]:before,
+[data-tooltip-location="left"]:after {
+  left: auto;
+  right: calc(100% + 5px);
+  bottom: 50%;
+}
+
+/* Tooltip */
+[data-tooltip-location="left"]:before {
+  transform: translate(-5px, 50%) scale(0.5);
+}
+[data-tooltip-location="left"]:hover:before {
+  transform: translate(-5px, 50%) scale(1);
+}
+
+/* Arrow */
+[data-tooltip-location="left"]:after {
+  border-width: 5px 0px 5px 5px;
+  border-color: transparent transparent transparent rgba(55, 64, 70, 0.9);
+  transform-origin: left;
+  transform: translateY(50%) scaleX(0);
+}
+[data-tooltip-location="left"]:hover:after {
+  transform: translateY(50%) scaleX(1);
+}
+
+
+
+/* RIGHT */
+[data-tooltip-location="right"]:before,
+[data-tooltip-location="right"]:after {
+  left: calc(100% + 5px);
+  bottom: 50%;
+}
+
+[data-tooltip-location="right"]:before {
+  transform: translate(5px, 50%) scale(0.5);
+}
+[data-tooltip-location="right"]:hover:before {
+  transform: translate(5px, 50%) scale(1);
+}
+
+[data-tooltip-location="right"]:after {
+  border-width: 5px 5px 5px 0px;
+  border-color: transparent rgba(55, 64, 70, 0.9) transparent transparent;
+  transform-origin: right;
+  transform: translateY(50%) scaleX(0);
+}
+[data-tooltip-location="right"]:hover:after {
+  transform: translateY(50%) scaleX(1);
+}
+
+
+
+/* BOTTOM */
+[data-tooltip-location="bottom"]:before,
+[data-tooltip-location="bottom"]:after {
+  top: calc(100% + 5px);
+  bottom: auto;
+}
+
+[data-tooltip-location="bottom"]:before {
+  transform: translate(-50%, 5px) scale(0.5);
+}
+[data-tooltip-location="bottom"]:hover:before {
+  transform: translate(-50%, 5px) scale(1);
+}
+
+[data-tooltip-location="bottom"]:after {
+  border-width: 0px 5px 5px 5px;
+  border-color: transparent transparent rgba(55, 64, 70, 0.9) transparent;
+  transform-origin: bottom;
+}
+
+
+
+
+
+
+
+
+
+
+
+@keyframes moveFocus { 
+  0%   { background-position: 0% 100% }
+  100% { background-position: 100% 0% }
+}
+
+body {
+  background: none;
+}
+
+main {
+  padding: 4%;
+  display: flex;
+  flex-direction: row;
+}
+
+button {
+  margin: 0;
+  padding: 0.7rem 1.4rem;
+
+  cursor: pointer;
+  text-align: center;
+  border: none;
+  border-radius: 4px;
+  outline: inherit;
+  text-decoration: none;
+  font-family: Roboto, sans-serif;
+  font-size: 0.7em;
+
+}
+button:hover {
+  background-color: #484f56;
+}
+button:active {
+  transform: scale(0.98);
+}
+button:focus {
+  box-shadow: 0 0 2px 2px #298bcf;
+}
+button::-moz-focus-inner {
+  border: 0;
+}
+
+.example-elements {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+  padding-right: 4%;
+}
+
+.example-elements p {
+  padding: 6px;
+  display: inline-block;
+  margin-bottom: 5%;
+}
+.example-elements p:hover {
+  border-left: 1px solid lightgrey;
+  border-right: 1px solid lightgrey;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.example-elements a {
+  margin-left: 6px;
+  margin-bottom: calc(5% + 10px);
+  color: #76daff;
+  text-decoration: none;
+}
+.example-elements a:hover {
+  margin-bottom: calc(5% + 9px);
+  border-bottom: 1px solid #76daff;
+}
+
+.example-elements button {
+  margin-bottom: 20px;
+}
+
+.info-wrapper {
+  flex-grow: 8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: justify;
+  padding-left: 6%;
+  border-left: 3px solid #35ea95;
+}
+
+.info-wrapper p {
+  color: rgba(255, 255, 255, 0.69);
+}
+.info-wrapper p {
+  max-width: 600px;
+  text-align: justify;
+}
+
+.info-wrapper .title-question {
+  display: block;
+  color: #fff;
+  font-size: 1.36em;
+  font-weight: 500;
+  padding-bottom: 24px;
+}
+
+
+/* Thumbnail settings */
+@media (max-width: 800px) {
+  html {
+/*     box-shadow: inset 0px -13px 0px -7px #0ebeff; */
+    animation-duration: 0.6s;
+  }
+  body {
+    display: flex;
+    background: none;
+    height: 100%;
+    margin: 0px;
+  }
+  main {
+    font-size: 1.1em;
+    padding: 6%;
+  }
+  .info-wrapper p:before,
+  .info-wrapper p:after {
+    display: none;
+  }
+  .example-elements {
+    max-width: 150px;
+    font-size: 22px;
+  }
+  .example-elements a, button {
+    display: none;
+  }
+  .example-elements p:before, 
+  .example-elements p:after {
+    visibility: visible;
+    opacity: 1;
+  }
+  .example-elements p:before {
+    content: "Tooltip";
+    font-size: 20px;
+    transform: translate(-50%, -5px) scale(1);
+  }
+  .example-elements p:after {
+    transform: translate(-50%, -1px) scaleY(1);
+  }
 }
 </style>
 
@@ -133,7 +448,7 @@ header('Content-Type: text/html; charset=utf-8');
                                             $res = $mysqli->query("SELECT DISTINCT(Lieu) FROM bafaComp ORDER BY Lieu DESC");
 
                                             while ($row = $res->fetch_assoc()) {
-                                              echo '<option value="' . $row['Lieu'] . '">' . $row['Lieu'] . '</option>';
+                                              echo '<option value="' . str_replace(" ","",$row['Lieu']) . '">' .  str_replace(" ","",$row['Lieu']) . '</option>';
                                               echo $row['Lieu'];
                                             }
                                             ?>
@@ -251,15 +566,15 @@ header('Content-Type: text/html; charset=utf-8');
         // Check if any option is selected 
         if(isset($_POST["theme"]))  
         { 
-            $query = $query . " AND Themes LIKE '%";
+            $query = $query . ' AND Themes LIKE "%';
             $i = 0;
             foreach ($_POST['theme'] as $subject)  {
                 if ($i == 0){
-                    $query = $query . $subject . "%' ";
+                    $query = $query . $subject . '%" ';
 
                 }
                 else{
-                    $query = $query . " OR Themes LIKE '%" . $subject . "%'" . " ";
+                    $query = $query . ' OR Themes LIKE "%' . $subject . '%"' . ' ' ;
                 }
                 $i = $i + 1;
                 
@@ -268,20 +583,20 @@ header('Content-Type: text/html; charset=utf-8');
         } 
         if(isset($_POST["accueil"]))  
         { 
-            $query = $query . " AND ( Accueil LIKE '%";
+            $query = $query . ' AND Accueil LIKE "%';
             $i = 0;
             foreach ($_POST['accueil'] as $subject)  {
                 if ($i == 0){
-                    $query = $query . $subject . "%' ";
+                    $query = $query . $subject . '%" ';
                    
                 }
                 else{
-                    $query = $query . " OR Accueil LIKE '%" . $subject . "%'" . " ";
+                    $query = $query . ' OR Accueil LIKE "%' . $subject . '%"' . ' ' ;
                 }
                 $i = $i + 1;
                 
             }
-            $query = $query . ")";
+
                             
         } 
 
@@ -296,15 +611,15 @@ header('Content-Type: text/html; charset=utf-8');
 
         if(isset($_POST["ville"]))  
         { 
-            $query = $query . " AND Lieu LIKE '%";
+            $query = $query . ' AND Lieu LIKE "%';
             $i = 0;
             foreach ($_POST['ville'] as $subject)  {
                 if ($i == 0){
-                    $query = $query . $subject . "%' ";
+                    $query = $query . $subject . '%" ';
 
                 }
                 else{
-                    $query = $query . " OR Lieu LIKE '%" . $subject . "%'" . " ";
+                    $query = $query . ' OR Lieu LIKE "%' . $subject . '%"' . ' ' ;
                 }
                 $i = $i + 1;
                 
@@ -312,7 +627,8 @@ header('Content-Type: text/html; charset=utf-8');
 
                             
         } 
-        $res = $mysqli->query($query);
+ 
+        $res = $mysqli->query($query . " ORDER BY Lieu ASC");
 
         $i=0;
         while ($row = $res->fetch_assoc()) {
@@ -344,12 +660,9 @@ header('Content-Type: text/html; charset=utf-8');
                 if ($p < sizeof($row) - 1){
                     if (strlen($value)>20){
                         echo '<td>';
-                        echo '<div id="parent">';
+                        echo '<p data-tooltip="' . $value . '">';
                         echo  substr($value, 0, 20) . "...";
-                        echo '<div id="hover-content">';
-                        echo $value;
-                        echo '</div>';
-                        echo '</div>';
+                        echo '</p>';
                         echo '</td>';
                     }
                     else{
