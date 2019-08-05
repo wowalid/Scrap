@@ -11,6 +11,12 @@ header('Content-Type: text/html; charset=utf-8');
 
 <link rel="stylesheet" href="dist/css/bootstrap-multiselect.css" type="text/css">
 <script type="text/javascript" src="dist/js/bootstrap-multiselect.js"></script>
+<title> Comparateur de formation BAFA</title>
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto">
+
+
 
 <!------ Include the above in your HEAD tag ---------->
 
@@ -34,9 +40,13 @@ header('Content-Type: text/html; charset=utf-8');
 
 
 <style>
-body {
-    padding-top: 50px;
-}
+      body {
+        font-family: 'Roboto', serif;
+
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Roboto', serif;
+            }
 .dropdown.dropdown-lg .dropdown-menu {
     margin-top: -1px;
     padding: 6px 20px;
@@ -77,7 +87,24 @@ body {
         min-width: 500px;
     }
 }
+#hover-content {
+    display:none;
+}
+#parent:hover #hover-content {
+    display:block;
+}
+.bg {
+
+  background: url('https://source.unsplash.com/twukN12EN7c/1920x1080') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+
+}
 </style>
+
+
 <div class="container">
 	<div class="row">
         
@@ -315,7 +342,20 @@ body {
             $p = 0;
             foreach ($row as $value) {
                 if ($p < sizeof($row) - 1){
-                    echo "<td>" . $value . "</td>";
+                    if (strlen($value)>20){
+                        echo '<td>';
+                        echo '<div id="parent">';
+                        echo  substr($value, 0, 20) . "...";
+                        echo '<div id="hover-content">';
+                        echo $value;
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</td>';
+                    }
+                    else{
+                        echo "<td>" . $value . "</td>";
+                    }
+                    
                 }
                 else{
 
@@ -336,3 +376,4 @@ body {
 
 
 ?> 
+
