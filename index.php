@@ -1,5 +1,7 @@
-
-<meta charset="utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<?php
+header('Content-Type: text/html; charset=utf-8');
+?>
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
@@ -20,6 +22,12 @@
                                             $mysqli = new mysqli($servername, $username, $password, "bafa");
                                             if ($mysqli->connect_errno) {
                                                 echo "Echec lors de la connexion à MySQL : (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+                                            }
+
+                                            /* Modification du jeu de résultats en utf8 */
+                                            if (!mysqli_set_charset($mysqli, "utf8")) {
+                                                printf("Erreur lors du chargement du jeu de caractères utf8 : %s\n", mysqli_error($mysqli));
+                                                exit();
                                             }
                                             
 ?>
@@ -131,7 +139,7 @@ body {
                                   </div>
                                   <div class="form-group">
                                     <label for="contain">Date</label><br/>
-                                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
+                                    <input type="text" name="daterange" value="01/01/2018 - 01/15/2031" />
 
                                     <script>
                                     $(function() {
@@ -233,12 +241,12 @@ body {
         } 
         if(isset($_POST["accueil"]))  
         { 
-            $query = $query . " AND Accueil LIKE '%";
+            $query = $query . " AND ( Accueil LIKE '%";
             $i = 0;
             foreach ($_POST['accueil'] as $subject)  {
                 if ($i == 0){
                     $query = $query . $subject . "%' ";
-
+                   
                 }
                 else{
                     $query = $query . " OR Accueil LIKE '%" . $subject . "%'" . " ";
@@ -246,12 +254,22 @@ body {
                 $i = $i + 1;
                 
             }
+            $query = $query . ")";
                             
         } 
 
+        if(isset($_POST["daterange"]))  
+        { 
+            $dateDebutStr = substr($_POST["daterange"], 0, 10);
+            $dateFinStr = substr($_POST["daterange"], 13, 10);
+            
+            $query = $query . " AND dateDebut > STR_TO_DATE('" . $dateDebutStr . "', '%m/%d/%Y') AND  dateFin < STR_TO_DATE('" . $dateFinStr . "', '%m/%d/%Y') ";
+        } 
+
+
         if(isset($_POST["ville"]))  
         { 
-            $query = $query . " AND Accueil LIKE '%";
+            $query = $query . " AND Lieu LIKE '%";
             $i = 0;
             foreach ($_POST['ville'] as $subject)  {
                 if ($i == 0){
@@ -259,11 +277,12 @@ body {
 
                 }
                 else{
-                    $query = $query . " OR Accueil LIKE '%" . $subject . "%'" . " ";
+                    $query = $query . " OR Lieu LIKE '%" . $subject . "%'" . " ";
                 }
                 $i = $i + 1;
                 
             }
+
                             
         } 
         $res = $mysqli->query($query);
@@ -293,9 +312,18 @@ body {
                 echo "<tbody>";
             }
             echo "<tr>";
+            $p = 0;
             foreach ($row as $value) {
-                echo "<td>" . $value . "</td>";
+                if ($p < sizeof($row) - 1){
+                    echo "<td>" . $value . "</td>";
+                }
+                else{
+
+                   echo  '<td><a class="btn btn-primary" href="'. $value . '" role="button">En savoir plus</a></td>';
+                }
+                $p = $p+1;
             }
+            
             echo "</tr>";
             $i = $i + 1;
         }
